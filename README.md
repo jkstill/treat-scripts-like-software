@@ -4,9 +4,7 @@ Scripts for the presentation 'Treat Scripts Like Software'
 https://github.com/jkstill/treat-scripts-like-software
 
 
-=============================
-assert.sh
-=============================
+= assert.sh
 
 Demo of using an assert function in Bash
 
@@ -46,27 +44,19 @@ Error!
 value of variable tvar is not NUMBER
 tvar: 123,x456.20
 
-=============================
-bash-regex.sh
-=============================
+= bash-regex.sh
 
 Example of using Bash regex matching
 
-=============================
-global-variables.sh
-=============================
+= global-variables.sh
 
 Example of setting global variables to read only
 
-=============================
-myscript.sh
-=============================
+= myscript.sh
 
 put a few elements together in a script
 
-=============================
-uninitialized-variable.sh
-=============================
+- uninitialized-variable.sh
 
 not checking for variable initialization can be dangerous
 
