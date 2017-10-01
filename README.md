@@ -4,7 +4,7 @@ Scripts for the presentation 'Treat Scripts Like Software'
 https://github.com/jkstill/treat-scripts-like-software
 
 
-= assert.sh
+<h3>assert.sh</h3>
 
 Demo of using an assert function in Bash
 
@@ -44,19 +44,19 @@ Error!
 value of variable tvar is not NUMBER
 tvar: 123,x456.20
 
-= bash-regex.sh
+<h3>bash-regex.sh</h3>
 
 Example of using Bash regex matching
 
-= global-variables.sh
+<h3>global-variables.sh</h3>
 
 Example of setting global variables to read only
 
-= myscript.sh
+<h3>myscript.sh</h3>
 
 put a few elements together in a script
 
-- uninitialized-variable.sh
+<h3>uninitialized-variable.sh</h3>
 
 not checking for variable initialization can be dangerous
 
