@@ -1,6 +1,18 @@
 #!/bin/bash
 
-typeset -r DEBUG=1
+# global variables
+
+typeset -r DEBUG=0
+
+typeset -A assertRE
+assertRE[ALPHA]="[[:alpha:][:punct:]\ \	]"
+assertRE[NUMBER]="[[:digit:].,]"
+assertRE[ALNUM]="[[:alnum:][:punct:]\ \ ]"
+assertRE[HEX]="[[:xdigit:]\ ]"
+
+typeset -r assertRE
+
+# functions
 
 debugOut () {
 	[[ $DEBUG -eq 1 ]] && {
@@ -9,58 +21,21 @@ debugOut () {
 	} 
 }
 
-_testAlpha () {
+_assert () {
+	typeset RE="$1"; shift
 	typeset valueToTest="$*"
 
-	if [[ $valueToTest =~ ^[[:alpha:][:punct:]\ \	]+$ ]]; then
-		debugOut "_testAlpha success for $valueToTest"
+	debugOut "_assert RE: |$RE|"
+
+	if [[ $valueToTest =~ ^${RE}+$ ]]; then
+		debugOut "_assert success for $valueToTest"
 		echo 0
 	else
-		debugOut "_testAlpha failed for $valueToTest"
+		debugOut "_assert failed for $valueToTest"
 		echo 1
 	fi
 
 }
-
-_testNumber () {
-	typeset valueToTest="$*"
-
-	if [[ $valueToTest =~ ^[[:digit:].,]+$ ]]; then
-		debugOut "_testNumber success for $valueToTest"
-		echo 0
-	else
-		debugOut "_testNumber failed for $valueToTest"
-		echo 1
-	fi
-
-}
-
-_testAlnum () {
-	typeset valueToTest="$*"
-
-	if [[ $valueToTest =~ ^[[:alnum:][:punct:]\ \ ]+$ ]]; then
-		debugOut "_testAlnum success for $valueToTest"
-		echo 0
-	else
-		debugOut "_testAlnum failed for $valueToTest"
-		echo 1
-	fi
-
-}
-
-_testHex () {
-	typeset valueToTest="$*"
-
-	if [[ $valueToTest =~ ^[[:xdigit:]\ ]+$ ]]; then
-		debugOut "_testHex success for $valueToTest"
-		echo 0
-	else
-		debugOut "_testHex failed for $valueToTest"
-		echo 1
-	fi
-
-}
-
 
 : <<'JKS-DOC'
 
@@ -71,7 +46,6 @@ ALPHA
 HEX
 NUMBER
 ALNUM
-
 
 
 JKS-DOC
@@ -98,15 +72,13 @@ assert () {
 
 	debugOut "varType: |$varType|"
 
-	typeset -A assertRE 
 
 	case $varType in
-		ALPHA) testResult=$( _testAlpha "$varValue");;
-		NUMBER) testResult=$( _testNumber "$varValue");;
-		ALNUM) testResult=$( _testAlnum "$varValue");;
-		HEX) testResult=$( _testHex "$varValue");;
+		ALPHA|NUMBER|ALNUM|HEX) ;;
 		*) echo "error in assert - abort!"; exit 99;;
 	esac 
+
+	testResult=$( _assert "${assertRE[$varType]}" "$varValue")
 
 	debugOut 'testResult: ' $testResult
 
@@ -130,11 +102,5 @@ assert $vName $vType "$vVal"
 echo
 echo 'OK!'
 echo
-
-
-
-
-
-
 
 
