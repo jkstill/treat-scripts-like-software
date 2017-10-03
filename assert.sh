@@ -3,14 +3,19 @@
 # global variables
 
 typeset -r DEBUG=0
+#set -v
 
 typeset -A assertRE
 assertRE[ALPHA]="[[:alpha:][:punct:]\ \	]"
 assertRE[NUMBER]="[[:digit:].,]"
 assertRE[ALNUM]="[[:alnum:][:punct:]\ \ ]"
 assertRE[HEX]="[[:xdigit:]\ ]"
+assertRE[PATH]="[_[:alnum:]\/\.\-]"
 
 typeset -r assertRE
+
+typeset -r assertKeys='+(ALPHA|NUMBER|ALNUM|HEX|PATH)'
+shopt -s extglob
 
 # functions
 
@@ -46,6 +51,7 @@ ALPHA
 HEX
 NUMBER
 ALNUM
+PATH
 
 
 JKS-DOC
@@ -74,7 +80,9 @@ assert () {
 
 
 	case $varType in
-		ALPHA|NUMBER|ALNUM|HEX) ;;
+		# this should be generated from asertRE keys
+		#ALPHA|NUMBER|ALNUM|HEX|PATH) ;;
+		${assertKeys}) ;;
 		*) echo "error in assert - abort!"; exit 99;;
 	esac 
 
@@ -96,6 +104,8 @@ assert () {
 vName=$1
 vType=$2
 vVal=$3
+
+debugOut $assertKeys
 
 assert $vName $vType "$vVal"
 
