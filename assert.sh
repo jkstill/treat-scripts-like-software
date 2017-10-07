@@ -1,9 +1,24 @@
 #!/bin/bash
 
+# need to declare this early on
+debugOut () {
+	[[ $DEBUG -eq 1 ]] && {
+		echo >&2
+		echo "$*" >&2
+	} 
+}
+
 # global variables
 
-typeset -r DEBUG=0
-#set -v
+if [[ -n $DEBUG ]]; then
+	if [[ $DEBUG -eq 0 ]]; then
+		DEBUG=0
+	else
+		DEBUG=1
+	fi
+fi
+
+typeset -r DEBUG
 
 typeset -A assertRE
 assertRE[ALPHA]="[[:alpha:][:punct:]\ \	]"
@@ -14,17 +29,27 @@ assertRE[PATH]="[_[:alnum:]\/\.\-]"
 
 typeset -r assertRE
 
-typeset -r assertKeys='+(ALPHA|NUMBER|ALNUM|HEX|PATH)'
+#typeset -r assertKeys='+(ALPHA|NUMBER|ALNUM|HEX|PATH)'
+# shell setting required for using variable in case/esac
 shopt -s extglob
+
+assertKeys=''
+
+# create the string used in the case statement to check for valid types
+for key in "${!assertRE[@]}"
+do
+		debugOut "key: $key"
+		assertKeys="${assertKeys}|${key}"
+done
+
+# add globbing '+()' to substring (skips first character which is '|' )
+assertKeys="+(${assertKeys:1})"
+typeset -r assertKeys
+
+debugOut "assertKeys: $assertKeys"
 
 # functions
 
-debugOut () {
-	[[ $DEBUG -eq 1 ]] && {
-		echo >&2
-		echo "$*" >&2
-	} 
-}
 
 _assert () {
 	typeset RE="$1"; shift
